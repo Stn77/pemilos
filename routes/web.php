@@ -14,13 +14,15 @@ Route::get('/', function () {
 Route::post('/lgn-bts', [AuthController::class, 'Login'])->name('login-submit');
 
 Route::middleware(['auth','admin'])->controller(AdminController::class)->group(function(){
-    Route::get('/Dashboard', 'dashboardAdmin')->name('admin.dasboard');
-    Route::get('/dashboard/peserta', 'dashboardAdminPeserta')->name('admin.dasboard.peserta');
-    Route::get('/dashboard/chart', 'dashboardAdminChartPemilihan')->name('admin.dasboard.chart');
-    Route::get('/dashboard/kandidat', 'dashboardAdminKandidat')->name('admin.dasboard.kandidat');
-    Route::get('/eka/{id}', 'editKandidat')->name('editKandidat')->middleware(['auth', 'admin']);
     // Route::post('/ekasd/{id}', 'updateKandidat');
 });
+
+
+Route::get('/Dashboard', 'dashboardAdmin')->name('admin.dasboard');
+Route::get('/dashboard/peserta', 'dashboardAdminPeserta')->name('admin.dasboard.peserta');
+Route::get('/dashboard/chart', 'dashboardAdminChartPemilihan')->name('admin.dasboard.chart');
+Route::get('/dashboard/kandidat', 'dashboardAdminKandidat')->name('admin.dasboard.kandidat');
+Route::get('/eka/{id}', 'editKandidat')->name('editKandidat')->middleware(['auth', 'admin']);
 
 // Volt::route('data', 'datapeserta');
 
