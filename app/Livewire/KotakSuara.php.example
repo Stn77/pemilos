@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Livewire;
+
+use App\Models\Kandidat;
+use App\Models\Peserta;
+use Livewire\Component;
+
+class KotakSuara extends Component
+{
+    public $selectedCandidate = null;
+    public $candidates;
+    public $showVisiMisi = false;
+    public $currentCandidate;
+
+    public function mount()
+    {
+        $this->candidates = Kandidat::all();
+    }
+
+    public function selectCandidate($candidateId)
+    {
+        $this->selectedCandidate = $candidateId;
+    }
+
+    public function clearSelection()
+    {
+        $this->selectedCandidate = null;
+    }
+
+    public function showVisiMisi($candidateId)
+    {
+        $this->currentCandidate = Kandidat::find($candidateId);
+        $this->showVisiMisi = true;
+    }
+
+    public function submitVote()
+    {
+        if (!$this->selectedCandidate) {
+            session()->flash('error', 'Please select a candidate first.');
+            return;
+        }
+
+        $peserta = Peserta::auth();
+        
+        if ($peserta->vote_status) {
+            session()->flash('error', 'You have already voted.');
+            return;
+        }
+
+        // Update kandidat vote count
+        $kandidat = Kandidat::find($this->selectedCandidate);
+        $kandidat->increment('jumlah_vote');
+
+        // Update peserta vote status
+        $peserta->update([
+            'vote_status' => true,
+            'vote_number' => $kandidat->no_kandidat
+        ]);
+
+        $this->emit('voteUpdated');
+        session()->flash('message', 'Your vote has been recorded successfully!');
+    }
+
+    public function render()
+    {
+        return view('livewire.kotak-suara');
+    }
+}
