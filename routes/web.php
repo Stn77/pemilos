@@ -4,6 +4,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
+use App\Livewire\BilikSuara;
+use App\Livewire\ChartPemilihan;
+use App\Livewire\DaftarKandidat;
+use App\Livewire\DataPeserta;
+use App\Livewire\WlcDashboard;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -18,11 +23,11 @@ Route::middleware(['auth','admin'])->controller(AdminController::class)->group(f
 });
 
 
-Route::get('/Dashboard', 'dashboardAdmin')->name('admin.dasboard');
-Route::get('/dashboard/peserta', 'dashboardAdminPeserta')->name('admin.dasboard.peserta');
-Route::get('/dashboard/chart', 'dashboardAdminChartPemilihan')->name('admin.dasboard.chart');
-Route::get('/dashboard/kandidat', 'dashboardAdminKandidat')->name('admin.dasboard.kandidat');
-Route::get('/eka/{id}', 'editKandidat')->name('editKandidat')->middleware(['auth', 'admin']);
+Route::get('/Dashboard', WlcDashboard::class)->name('admin.dasboard');
+Route::get('/dashboard/peserta', DataPeserta::class)->name('admin.dasboard.peserta');
+Route::get('/dashboard/chart', ChartPemilihan::class)->name('admin.dasboard.chart');
+Route::get('/dashboard/kandidat', DaftarKandidat::class)->name('admin.dasboard.kandidat');
+// Route::get('/eka/{id}', 'editKandidat')->name('editKandidat')->middleware(['auth', 'admin']);
 
 // Volt::route('data', 'datapeserta');
 
@@ -34,8 +39,8 @@ Route::controller(UserController::class)->group(function (){
 
 });
 
-Route::middleware(['auth','peserta', 'vote'])->controller(PageController::class)->group(function (){
-    Route::get('/vote', 'votePage')->name('votePage');
+Route::middleware(['auth','peserta', 'vote'])->group(function (){
+    Route::get('/vote', BilikSuara::class)->name('votePage');
 });
 
 Route::get('/telah-vote', [PageController::class, 'voteTrue'])->name('voteTrue');
